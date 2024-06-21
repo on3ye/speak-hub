@@ -10,6 +10,6 @@ const PORT = process.env.PORT || 3000;
 app.use('/api/auth', authRoutes);
 
 app.listen(PORT, (err) => {
-    if (err) console.log("An error occurred while listening on port " + PORT);
+    if (err) console.error("An error occurred while listening on port " + PORT + ":\n" + err.message);
     else console.log("Server is listening on port " + PORT);
 });
