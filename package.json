@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "description": "A web application for worldwide communication",
   "main": "./server/index.js",
+  "type": "module",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
