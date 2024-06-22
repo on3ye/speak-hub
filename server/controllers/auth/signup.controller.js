@@ -11,18 +11,18 @@ export const SignupController = async (req, res) => {
 
         const fnCheck = fullnameCheck(full_name);
         const unCheck = usernameCheck(username);
-        if (!fnCheck.status) return res.send({ error: fnCheck.message });
-        if (!unCheck.status) return res.send({ error: unCheck.message });
+        if (!fnCheck.status) return res.status(401).send({ error: fnCheck.message });
+        if (!unCheck.status) return res.status(401).send({ error: unCheck.message });
 
-        if (password.length < 8) return res.send({ error: "Password must be at least 8 characters!" });
-        if (password !== confirm_password) return res.send({ error: "Passwords do not match!" });
+        if (password.length < 8) return res.status(401).send({ error: "Password must be at least 8 characters!" });
+        if (password !== confirm_password) return res.status(401).send({ error: "Passwords do not match!" });
 
         const user = await User.findOne({ username });
-        if (user) return res.send({ error: "Username already exists!" });
+        if (user) return res.status(409).send({ error: "Username already exists!" });
 
         var newUserId;
         bcrypt.hash(password, 10, async (err, hash) => {
-            if (err) return res.send({ error: "An error occurred while hashing the password: " + err.message });
+            if (err) return res.status(500).send({ error: "An error occurred while hashing the password: " + err.message });
             const newUser = new User({
                 full_name: full_name,
                 username: username,
@@ -35,9 +35,9 @@ export const SignupController = async (req, res) => {
         });
 
         generateToken(newUserId, res);
-        return res.send({ success: "Signup successful!" });
+        return res.status(200).send({ success: "Signup successful!" });
     } catch (err) {
         console.error("An error occurred at the SignupController\n" + err.message);
-        return res.send({ error: err.message });
+        return res.status(500).send({ error: err.message });
     };
 }
