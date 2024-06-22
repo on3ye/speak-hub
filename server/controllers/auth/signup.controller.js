@@ -10,7 +10,7 @@ export const SignupController = async (req, res) => {
         const fnCheck = fullnameCheck(full_name);
         const unCheck = usernameCheck(username);
         if (!fnCheck.status) return res.send({ error: fnCheck.message });
-        if (!fnCheck.status) return res.send({ error: unCheck.message });
+        if (!unCheck.status) return res.send({ error: unCheck.message });
 
         if (password.length < 8) return res.send({ error: "Password must be at least 8 characters!" });
         if (password !== confirm_password) return res.send({ error: "Passwords do not match!" });
