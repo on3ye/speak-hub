@@ -1,11 +1,19 @@
+import User from "../../models/user.model.js";
+
+import { fullnameCheck } from "../../checkers/fullname.checker.js";
+import { usernameCheck } from "../../checkers/username.checker.js";
+
 export const SignupController = async (req, res) => {
     try {
         const { full_name, username, password, confirm_password, gender } = req.body;
 
-        if (!full_name || !username || !password || !confirm_password || !gender) return res.send({ error: "Please fill in all fields!" });
+        const fnCheck = fullnameCheck(full_name);
+        const unCheck = usernameCheck(username);
+        if (!fnCheck.status) return res.send({ error: fnCheck.message });
+        if (!fnCheck.status) return res.send({ error: unCheck.message });
+
+        if (password.length < 8) return res.send({ error: "Password must be at least 8 characters!" });
         if (password !== confirm_password) return res.send({ error: "Passwords do not match!" });
-        if (password.length < 8) return res.send({ error: "Password must be at least 8 characters long!" });
-        if (username.match(/^[a-zA-Z\-]+$/) == null) return res.send({ error: "Usernames can only contain lowercase letters, numbers, (.) and (_)!"})
 
         const user = await User.findOne({ username });
         if (user) return res.send({ error: "Username already exists!" });
