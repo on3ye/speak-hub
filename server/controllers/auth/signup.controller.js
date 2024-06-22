@@ -1,3 +1,4 @@
+import bcrypt from "bcrypt";
 import User from "../../models/user.model.js";
 
 import { fullnameCheck } from "../../checkers/fullname.checker.js";
@@ -18,14 +19,19 @@ export const SignupController = async (req, res) => {
         const user = await User.findOne({ username });
         if (user) return res.send({ error: "Username already exists!" });
 
-        const newUser = new User({
-            full_name: full_name,
-            username: username,
-            password: password,
-            gender: gender,
-            profile_picture: `${process.env.AVATAR_URI}/${(gender === "male") ? "boy" : "girl"}?username=${username}`,
+        bcrypt.hash(password, 10, async (err, hash) => {
+            if (err) return res.send({ error: "An error occurred while hashing the password: " + err.message });
+            const newUser = new User({
+                full_name: full_name,
+                username: username,
+                password: hash,
+                gender: gender,
+                profile_picture: `${process.env.AVATAR_URI}/${(gender === "male") ? "boy" : "girl"}?username=${username}`,
+            });
+    
+            await newUser.save();
         });
-        await newUser.save();
+
         return res.send({ success: "Signup successful!" });
     } catch (err) {
         console.error("An error occurred at the SignupController\n" + err.message);
