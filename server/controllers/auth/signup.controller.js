@@ -3,6 +3,7 @@ import User from "../../models/user.model.js";
 
 import { fullnameCheck } from "../../checkers/fullname.checker.js";
 import { usernameCheck } from "../../checkers/username.checker.js";
+import generateToken from "../../utils/generate.token.js";
 
 export const SignupController = async (req, res) => {
     try {
@@ -19,6 +20,7 @@ export const SignupController = async (req, res) => {
         const user = await User.findOne({ username });
         if (user) return res.send({ error: "Username already exists!" });
 
+        var newUserId;
         bcrypt.hash(password, 10, async (err, hash) => {
             if (err) return res.send({ error: "An error occurred while hashing the password: " + err.message });
             const newUser = new User({
@@ -28,10 +30,11 @@ export const SignupController = async (req, res) => {
                 gender: gender,
                 profile_picture: `${process.env.AVATAR_URI}/${(gender === "male") ? "boy" : "girl"}?username=${username}`,
             });
-    
+            newUserId = newUser._id;
             await newUser.save();
         });
 
+        generateToken(newUserId, res);
         return res.send({ success: "Signup successful!" });
     } catch (err) {
         console.error("An error occurred at the SignupController\n" + err.message);
