@@ -129,4 +129,14 @@ dist
 .yarn/install-state.gz
 .pnp.*
 
-.vscode/
+# Editor directories and files
+.vscode/*
+!.vscode/extensions.json
+.idea
+.DS_Store
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+*.local
