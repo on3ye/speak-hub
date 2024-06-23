@@ -1,13 +1,16 @@
-export const protectRoute = async (req, res, next) => {
+import jwt from "jsonwebtoken";
+import User from "../models/user.model.js";
+
+export default async function protectRoute(req, res, next) {
     try {
         const token = req.cookies.token;
         if (!token) return res.status(401).send({ error: "You are not logged in!" });
 
         const decoded = jwt.verify(token, process.env.JWT_SECRET);
-        if (!decoded) res.status(401).send({ error: "Invalid token!" });
+        if (!decoded) return res.status(401).send({ error: "Invalid token!" });
 
         const user = await User.findById(decoded.userId).select("-password");
-        if (!user) res.status(404).send({ error: "User not found!" });
+        if (!user) return res.status(404).send({ error: "User not found!" });
 
         req.user = user;
         next();
