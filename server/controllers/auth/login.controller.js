@@ -14,12 +14,7 @@ export const LoginController = async (req, res) => {
 
         generateToken(user._id, res);
 
-        return res.status(200).json({
-            _id: user._id,
-            full_name: user.full_name,
-            username: user.username,
-            gender: user.gender,
-        });
+        return res.status(200).send({ message: "Login successful!" });
     } catch (err) {
         console.error("An error occurred at the LoginController\n" + err.message);
         return res.status(500).send({ error: err.message });
