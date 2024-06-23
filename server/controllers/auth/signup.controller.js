@@ -35,7 +35,7 @@ export const SignupController = async (req, res) => {
         });
 
         generateToken(newUserId, res);
-        return res.status(200).send({ success: "Signup successful!" });
+        return res.status(200).send({ message: "Signup successful!" });
     } catch (err) {
         console.error("An error occurred at the SignupController\n" + err.message);
         return res.status(500).send({ error: err.message });
