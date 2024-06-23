@@ -1,7 +1,12 @@
-import { Button } from "./components/ui/button";
+import Login from "@/pages/login/Login";
+import { ThemeProvider } from "@/components/theme-provider";
 
-export default function App() {
+const App = () => {
   return (
-    <Button>Click Me!</Button>
+    <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
+      <Login />
+    </ThemeProvider>
   );
 }
+
+export default App;
