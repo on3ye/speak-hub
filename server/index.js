@@ -1,6 +1,7 @@
 import { configDotenv } from "dotenv";
 import express from "express";
 import cookieParser from "cookie-parser";
+import cors from "cors";
 configDotenv();
 
 import { connectToMongoDB } from "./database/connect.db.js";
@@ -12,6 +13,7 @@ const PORT = process.env.PORT || 3000;
 
 app.use(express.json());
 app.use(cookieParser());
+app.use(cors());
 
 app.use('/api/auth', authRoutes);
 app.use('/api/messages', messagesRoutes);
