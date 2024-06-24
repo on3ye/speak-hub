@@ -11,12 +11,16 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { PasswordInput } from "@/components/ui/password-input";
 import { useState } from "react";
+import axios from "axios";
+import { useToast } from "@/components/ui/use-toast";
 
 const Login = () => {
   const [inputs, setInputs] = useState({
     username: "",
-    password: ""
+    password: "",
   });
+
+  const { toast } = useToast();
 
   return (
     <div className="h-dvh flex justify-center items-center">
@@ -36,10 +40,12 @@ const Login = () => {
                 <Input
                   id="username"
                   value={inputs.username}
-                  onChange={(e) => setInputs({
-                    username: e.target.value,
-                    password: inputs.password,
-                  })}
+                  onChange={(e) =>
+                    setInputs({
+                      username: e.target.value,
+                      password: inputs.password,
+                    })
+                  }
                   autoComplete="username"
                 />
               </div>
@@ -48,10 +54,12 @@ const Login = () => {
                 <PasswordInput
                   id="password"
                   value={inputs.password}
-                  onChange={(e) => setInputs({
-                    username: inputs.username,
-                    password:  e.target.value,
-                  })}
+                  onChange={(e) =>
+                    setInputs({
+                      username: inputs.username,
+                      password: e.target.value,
+                    })
+                  }
                   autoComplete="password"
                 />
               </div>
@@ -60,7 +68,47 @@ const Login = () => {
         </CardContent>
         <CardFooter className="flex justify-between">
           <Button variant="outline">Sign up</Button>
-          <Button type="submit">Login</Button>
+          <Button
+            onClick={(e) => {
+              e.preventDefault();
+              if (!inputs.username || !inputs.password)
+                toast({
+                  title: "Uh oh! Something went wrong.",
+                  description: "Please fill out all fields.",
+                  variant: "destructive",
+                });
+              try {
+                axios({
+                  method: "post",
+                  url: "http://localhost:5500/api/auth/login",
+                  data: {
+                    username: inputs.username,
+                    password: inputs.password,
+                  },
+                })
+                  .then((response) => {
+                    if (response.status === 200) {
+                      toast({
+                        title: "Everything looks good! Enjoy.",
+                        description: response.data.message,
+                      });
+                    }
+                  })
+                  .catch((error) => {
+                    toast({
+                      title: "Uh oh! Something went wrong.",
+                      description: error.response.data.error,
+                      variant: "destructive",
+                    });
+                  });
+              } catch (err) {
+                console.log(err);
+              }
+            }}
+            type="submit"
+          >
+            Login
+          </Button>
         </CardFooter>
       </Card>
     </div>
