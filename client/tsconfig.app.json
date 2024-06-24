@@ -30,5 +30,5 @@
       ]
     }
   },
-  "include": ["src"]
+  "include": ["src", "@/components/ui/toast.tsx", "@/components/ui/toaster.tsx", "@/components/ui/use-toast.ts"]
 }
