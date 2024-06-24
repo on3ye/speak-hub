@@ -13,8 +13,10 @@ import { PasswordInput } from "@/components/ui/password-input";
 import { useState } from "react";
 
 const Login = () => {
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
+  const [inputs, setInputs] = useState({
+    username: "",
+    password: ""
+  });
 
   return (
     <div className="h-dvh flex justify-center items-center">
@@ -30,20 +32,26 @@ const Login = () => {
           <form>
             <div className="grid w-full items-center gap-4">
               <div className="flex flex-col space-y-1.5">
-                <Label htmlFor="username">Username</Label>
+                <Label htmlFor="username">Username:</Label>
                 <Input
                   id="username"
-                  value={username}
-                  onChange={(e) => setUsername(e.target.value)}
+                  value={inputs.username}
+                  onChange={(e) => setInputs({
+                    username: e.target.value,
+                    password: inputs.password,
+                  })}
                   autoComplete="username"
                 />
               </div>
               <div className="flex flex-col space-y-1.5">
-                <Label htmlFor="password">Password</Label>
+                <Label htmlFor="password">Password:</Label>
                 <PasswordInput
                   id="password"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
+                  value={inputs.password}
+                  onChange={(e) => setInputs({
+                    username: inputs.username,
+                    password:  e.target.value,
+                  })}
                   autoComplete="password"
                 />
               </div>
@@ -52,7 +60,7 @@ const Login = () => {
         </CardContent>
         <CardFooter className="flex justify-between">
           <Button variant="outline">Sign up</Button>
-          <Button>Login</Button>
+          <Button type="submit">Login</Button>
         </CardFooter>
       </Card>
     </div>
